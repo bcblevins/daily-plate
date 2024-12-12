@@ -4,8 +4,6 @@ import fetchFood from "../services/fetchFood";
 
 const FoodSearch = () => {
     const [search, setSearch] = useState("");
-    const [debouncedSearch, setDebouncedSearch] = useState("");
-
     const results = useQuery(["search", search], fetchFood, {
         enabled:!!search // Disable query until there is input
     });
@@ -25,8 +23,7 @@ const FoodSearch = () => {
                     <ul>
                         {results.data.map((item, index) => (
                             <li key={index}>
-                                {item.name}
-                                {item.caloric}
+                                {item.name} ({item.amount}{item.unit})
                             </li>
                         ))}
                     </ul>
