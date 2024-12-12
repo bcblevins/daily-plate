@@ -12,7 +12,7 @@ export async function register({ email, password }) {
 
 export async function login({email, password}) {
   console.log(supabase)
-  const { user, session, error } = await supabase.auth.signInWithPassword({
+  const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password
   })
@@ -20,6 +20,8 @@ export async function login({email, password}) {
   if (error) {
     throw new Error('Supabase: Unable to sign in')
   }
+  console.log(data)
+  return data;
 }
 
 export async function logout() {
