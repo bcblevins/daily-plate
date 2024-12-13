@@ -15,7 +15,7 @@
 // }
 
   
-const fetchFood = async ({queryKey}) => {
+export async function fetchFood({queryKey}) {
     const foods = 
 [
     {
@@ -150,4 +150,6 @@ const fetchFood = async ({queryKey}) => {
     return results
 }
 
-export default fetchFood;
+export async function eatFood({queryKey}) {
+  
+}
