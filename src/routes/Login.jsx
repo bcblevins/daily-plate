@@ -14,7 +14,8 @@ const Login = () => {
 
     const mutation = useMutation(login, {
         onSuccess: (data) => {
-            console.log("Login sucessful" + data)
+            console.log("Login successful")
+            console.log(data)
             navigate('/')
         },
         onError: (error) => {

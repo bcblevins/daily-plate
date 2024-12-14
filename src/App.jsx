@@ -4,6 +4,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Link, BrowserRouter, Routes, Route } from 'react-router'
 import Home from './routes/Home'
 import Login from './routes/Login'
+import PrivateRoute from './components/PrivateRoute'
 
 // This will handle API calls to nutrition info
 const queryClient = new QueryClient({
@@ -22,7 +23,14 @@ const App = () => {
       <QueryClientProvider client={queryClient}>
         <Routes>
           <Route path='/login' element={<Login />} />
-          <Route path="/" element={<Home />} />
+          <Route
+            path="/"
+            element={
+              <PrivateRoute >
+                <Home />
+              </PrivateRoute>
+            }
+          />
         </Routes>
       </QueryClientProvider>
     </BrowserRouter>
