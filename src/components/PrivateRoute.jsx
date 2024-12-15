@@ -4,8 +4,6 @@ import { useAuthStatus } from "../services/auth";
 
 function PrivateRoute({children}) {
     const { isLoggedIn, loading } = useAuthStatus();
-    console.log("PrivateRouter isLoggedIn", isLoggedIn)
-    console.log("PrivateRoute loading", loading);
 
     if (loading) {
         return <div>Loading...</div>

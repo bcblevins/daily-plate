@@ -1,21 +1,25 @@
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { login } from "../services/auth";
 import { useNavigate } from "react-router";
+import { UserContext } from "../components/contexts"
+import { getUser } from "../services/userService";
 
 const Login = () => {
     // State variables are dynamic, normal variables are not. The user can manipulate these variables, so we should use useState()
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loginFail, setLoginFail] = useState(false);
+    const [user, setUser] = useContext(UserContext)
 
     // Used to change route
     const navigate = useNavigate();
 
     const mutation = useMutation(login, {
-        onSuccess: (data) => {
+        onSuccess: async (data) => {
             console.log("Login successful")
             console.log(data)
+            console.log(await fetchUser())
             navigate('/')
         },
         onError: (error) => {
@@ -28,6 +32,12 @@ const Login = () => {
         e.preventDefault();
         setLoginFail(false)
         mutation.mutate({ email, password })
+    }
+
+    const fetchUser = async () => {
+        let userData = await getUser()
+        setUser(userData)
+        return userData;
     }
 
     return (

@@ -12,7 +12,6 @@ export async function register({ email, password }) {
 }
 
 export async function login({ email, password }) {
-  console.log(supabase)
   const { data, error } = await supabase.auth.signInWithPassword({
     email: email,
     password: password
@@ -21,7 +20,6 @@ export async function login({ email, password }) {
   if (error) {
     throw new Error('Supabase: Unable to sign in')
   }
-  console.log(data)
   return data;
 }
 
@@ -48,7 +46,6 @@ export function useAuthStatus() {
       // Broken down, the expression is:
       // - "data?.session": I want data.session, but if data doesn't exist return null instead of throwing error.
       // - "!!": I want the boolean equivalent of the above  
-      console.log("!!data?.session", !!data?.session)
       setIsLoggedIn(!!data?.session);
       setLoading(false);
     }
@@ -68,7 +65,6 @@ export function useAuthStatus() {
     // - "session" represents the current session
     // - using "_" instead of "event" just communicates that we don't care about and won't use the "event" argument.
     const { data: subscription } = supabase.auth.onAuthStateChange((_, session) => {
-      console.log("session", !!session)
       setIsLoggedIn(!!session);
     })
 
@@ -82,6 +78,5 @@ export function useAuthStatus() {
       }
     }
   }, []);
-  console.log("isLoggedIn", isLoggedIn)
   return {isLoggedIn, loading};
 }
