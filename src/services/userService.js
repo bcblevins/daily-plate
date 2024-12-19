@@ -48,13 +48,18 @@ export async function getPrefs() {
 }
 
 export async function getEaten() {
+    const fiveDaysAgo = new Date();
+    fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5) 
+    fiveDaysAgo.setHours(0,0,0,0)
     const { data, error } = await supabase
     .from("user_ate")
     .select()
+    .gte("created_at", fiveDaysAgo.toISOString())
 
     if (error) {
-        throw new Error("Cannot fetch eaten foods", error.message)
+        throw new Error("Cannot fetch eaten foods", error)
     } else {
+        console.log(data)
         return data
     }
 }
