@@ -97,8 +97,7 @@ const Home = () => {
                     <h3>Protein: {protein}g</h3>
                     <h3>Carbs: {carbs}g</h3>
                     <h3>Fats: {fats}g</h3>
-                    <p>{user.foods[0].name}</p>
-                    <button onClick={handleShowFood}>Yay food!</button>
+                    <button onClick={handleShowFood}>Log Food</button>
                 </div>
             }
             {showFood &&

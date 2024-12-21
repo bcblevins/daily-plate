@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import {fetchFood} from "../services/foodService";
+import { searchAllFoods } from "../services/foodService";
 import EatFood from "./EatFood";
 
 const FoodSearch = () => {
@@ -8,7 +8,7 @@ const FoodSearch = () => {
     const [showEat, setShowEat] = useState(false);
     const [foodSelection, setFoodSelection] = useState({})
 
-    const results = useQuery(["search", search], fetchFood, {
+    const results = useQuery(["search", search], searchAllFoods, {
         enabled: !!search // Disable query until there is input
     });
 
@@ -24,28 +24,28 @@ const FoodSearch = () => {
                 <EatFood food={foodSelection} />
             )}
             {!showEat && (
-                           <div>
-                <h1>Food Search</h1>
-                <input
-                    type="text"
-                    placeholder="Search"
-                    value={search}
-                    onChange={(e) => setSearch(e.target.value)}
-                />
-                {results.data && (
-                    <div>
-                        <ul>
-                            {results.data.map((food, index) => (
-                                <li 
-                                key={index} 
-                                onClick={() => handleFoodSelection(food)}>
-                                    {food.name} ({food.amount}{food.unit})
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                )}
-            </div> 
+                <div>
+                    <h1>Food Search</h1>
+                    <input
+                        type="text"
+                        placeholder="Search"
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                    {results.data && (
+                        <div>
+                            <ul>
+                                {results.data.map((food, index) => (
+                                    <li
+                                        key={index}
+                                        onClick={() => handleFoodSelection(food)}>
+                                        {food.name} ({food.amount}{food.unit})
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    )}
+                </div>
             )}
 
         </div>

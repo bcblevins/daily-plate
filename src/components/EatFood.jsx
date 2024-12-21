@@ -1,8 +1,15 @@
+import { useMutation } from "@tanstack/react-query";
+import { eatFood } from "../services/foodService";
+
 /* eslint-disable react/prop-types */
 const EatFood = ({food}) => {
-    const handleSubmit = (e) => {
-        e.preventDefault();
-
+    const mutation = useMutation(eatFood)
+    const handleSubmit = () => {
+        const foodEntry = {
+            food_id: food.id,
+            amount: food.amount
+        }
+        mutation.mutate(foodEntry)
     }
 
     return (
