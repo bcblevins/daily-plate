@@ -128,7 +128,7 @@ export async function searchDBFoods(search) {
   let results = []
   for (let food of foods) {
     if (food.name.toLocaleLowerCase().includes(search) || search.includes(food.name)) {
-      food.isDBFood = true;
+      food.isUserFood = false;
       results.push(food);
     }
   }
@@ -137,7 +137,19 @@ export async function searchDBFoods(search) {
 }
 
 export async function searchAllFoods({ queryKey }) {
-  
+  let search = queryKey[1]
+  console.log(queryKey)
+  let userFoods = queryKey[2]
+  let results = [];
+  for (let food of userFoods) {
+    if (food.name.toLocaleLowerCase().includes(search) || search.includes(food.name)) {
+      food.isUserFood = true;
+      results.push(food);
+    }
+  }
+  let dbResults = await searchDBFoods(search)
+
+  return [...results, ...dbResults]
 }
 
 export async function eatFood(food) {

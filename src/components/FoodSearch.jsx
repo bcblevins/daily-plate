@@ -1,14 +1,16 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { searchAllFoods } from "../services/foodService";
 import EatFood from "./EatFood";
+import { UserContext } from "./contexts";
 
 const FoodSearch = () => {
     const [search, setSearch] = useState("");
     const [showEat, setShowEat] = useState(false);
     const [foodSelection, setFoodSelection] = useState({})
+    const user = useContext(UserContext)
 
-    const results = useQuery(["search", search], searchAllFoods, {
+    const results = useQuery(["search", search, user[0].foods], searchAllFoods, {
         enabled: !!search // Disable query until there is input
     });
 
