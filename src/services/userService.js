@@ -52,7 +52,7 @@ export async function getEaten() {
     fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5) 
     fiveDaysAgo.setHours(0,0,0,0)
     const { data, error } = await supabase
-    .from("user_ate")
+    .from("user_log")
     .select()
     .gte("created_at", fiveDaysAgo.toISOString())
 

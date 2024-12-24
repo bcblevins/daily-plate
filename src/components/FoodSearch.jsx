@@ -41,7 +41,7 @@ const FoodSearch = () => {
                                     <li
                                         key={index}
                                         onClick={() => handleFoodSelection(food)}>
-                                        {food.name} ({food.amount}{food.unit})
+                                        {food.name} ({food.amount}{food.unit}) {food.isUserFood ? "[User]" : ""}
                                     </li>
                                 ))}
                             </ul>

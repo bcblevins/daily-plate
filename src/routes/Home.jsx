@@ -98,6 +98,15 @@ const Home = () => {
                     <h3>Carbs: {carbs}g</h3>
                     <h3>Fats: {fats}g</h3>
                     <button onClick={handleShowFood}>Log Food</button>
+                    <ul>
+                        {user.eaten.map((food, index) => (
+                            <li
+                                key={index}
+                                onClick={() => handleFoodSelection(food)}>
+                                {food.id}
+                            </li>
+                        ))}
+                    </ul>
                 </div>
             }
             {showFood &&
