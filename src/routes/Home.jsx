@@ -9,6 +9,8 @@ const Home = () => {
     const [protein, setProtein] = useState(0);
     const [carbs, setCarbs] = useState(0)
     const [fats, setFats] = useState(0)
+    const [eatenList, setEatenList] = useState([]);
+    const [date, setDate] = useState(new Date())
 
     const handleShowFood = () => {
         setShowFood(!showFood)
@@ -16,7 +18,7 @@ const Home = () => {
 
     useEffect(() => {
 
-        let todayFoods = calcTodaysFoodList()
+        let todayFoods = calcEatenList(date)
 
         // reduce array by each macro
         setProtein(
@@ -45,14 +47,19 @@ const Home = () => {
         // - we need an array of objects that includes nutritional info
         // - "calcTodaysFoodList" gets nutritional info from "user.foods" and adjusts them
         // by the "amount" in "user.eaten"
-        function calcTodaysFoodList() {
+        function calcEatenList(date) {
             // output array
             let todayFoods = [];
 
-            // create new "eaten" array from "user.eaten" that only has todays foods
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-            let eaten = user.eaten.filter((food) => new Date(food.created_at) >= today)
+            let dayAfter = new Date(date);
+            dayAfter.setDate(dayAfter.getDate() + 1);
+            dayAfter.setHours(0, 0, 0, 0);
+
+            // create new "eaten" array from "user.eaten" that only has foods for given date
+            let eaten = user.eaten.filter((food) => {
+                let created = new Date(food.created_at);
+                return created >= date && created < dayAfter
+            })
             console.log(eaten)
 
 
@@ -99,10 +106,12 @@ const Home = () => {
                     <h3>Fats: {fats}g</h3>
                     <button onClick={handleShowFood}>Log Food</button>
                     <ul>
-                        {user.eaten.map((food, index) => (
-                            <li
-                                key={index}
-                                onClick={() => handleFoodSelection(food)}>
+                        {user.eaten
+                        .filter((food) => 
+                            new Date(food.created_at) >= new Date().setHours(0,0,0,0)
+                        )
+                        .map((food, index) => (
+                            <li key={index}>
                                 {food.id}
                             </li>
                         ))}
