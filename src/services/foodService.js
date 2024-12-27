@@ -158,7 +158,7 @@ export async function getFoodById(id) {
 }
 
 export async function searchAllFoods({ queryKey }) {
-  let search = queryKey[1]
+  let search = queryKey[1].toLocaleLowerCase()
   let userFoods = queryKey[2]
   let results = [];
   for (let food of userFoods) {

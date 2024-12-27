@@ -1,98 +1,86 @@
-import { Link } from "react-router"
 import FoodSearch from "../components/FoodSearch"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useState, useCallback } from "react"
 import { UserContext } from "../components/contexts";
 
 const Home = () => {
     const [showFood, setShowFood] = useState(false);
-    const [user, setUser] = useContext(UserContext);
-    const [protein, setProtein] = useState(0);
-    const [carbs, setCarbs] = useState(0)
-    const [fats, setFats] = useState(0)
+    const [user] = useContext(UserContext);
     const [eatenList, setEatenList] = useState([]);
     const [date, setDate] = useState(new Date())
+    const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 })
 
     const handleShowFood = () => {
         setShowFood(!showFood)
     }
 
-    useEffect(() => {
+    function roundToTenth(num) {
+        return Math.round(num * 10) / 10;
+    }
 
-        let todayFoods = calcEatenList(date)
-
-        // reduce array by each macro
-        setProtein(
-            roundToTenth(todayFoods.reduce(
-                (protein, food) => protein + food.protein, 0
-            ))
-        )
-
-        setCarbs(
-            roundToTenth(todayFoods.reduce(
-                (carbs, food) => carbs + food.carbs, 0
-            ))
-        )
-
-        setFats(
-            roundToTenth(todayFoods.reduce(
-                (fats, food) => fats + (food.unsaturated_fat + food.saturated_fat), 0
-            ))
-        )
-
-        function roundToTenth(num) {
-            return Math.round(num * 10) / 10;
-        }
-
-        // - "user.eaten" is an array of objects {id, food_id, amount, created_at}
-        // - we need an array of objects that includes nutritional info
-        // - "calcTodaysFoodList" gets nutritional info from "user.foods" and adjusts them
-        // by the "amount" in "user.eaten"
-        function calcEatenList(date) {
-            // output array
-            let todayFoods = [];
-
-            let dayAfter = new Date(date);
+    // - "user.eaten" is an array of objects {id, food_id, amount, created_at}
+    // - we need an array of objects that includes nutritional info
+    // - "calcTodaysFoodList" gets nutritional info from "user.foods" and adjusts them
+    // by the "amount" in "user.eaten"
+    const calcEatenList = useCallback(
+        (date) => {
+            const foodList = [];
+            const dayAfter = new Date(date);
             dayAfter.setDate(dayAfter.getDate() + 1);
             dayAfter.setHours(0, 0, 0, 0);
+            date.setHours(0, 0, 0, 0);
 
-            // create new "eaten" array from "user.eaten" that only has foods for given date
-            let eaten = user.eaten.filter((food) => {
-                let created = new Date(food.created_at);
-                return created >= date && created < dayAfter
-            })
-            console.log(eaten)
+            const eaten = user.eaten.filter((food) => {
+                const created = new Date(food.created_at);
+                return created >= date && created < dayAfter;
+            });
 
+            let protein = 0,
+                carbs = 0,
+                fats = 0;
 
-            //  loop through new "eaten" array
-            for (let f of eaten) {
-
-                //  find matching user.foods based on eaten.id, 
-                let currentFood = user.foods.find((food) => food.id == f.food_id);
+            for (const f of eaten) {
+                const currentFood = user.foods.find((food) => food.id === f.food_id);
                 if (!currentFood) {
-                    console.warn(`No user.food found for food id: ${f.food_id}. Skipping.`)
-                    continue
+                    console.warn(`No user.food found for food id: ${f.food_id}. Skipping.`);
+                    continue;
                 }
 
-                //  create new object based on it and update properties based on serving 
-                let servingCoeff = f.amount / currentFood.amount
+                const servingCoeff = f.amount / currentFood.amount;
 
-                // create list of properties from object, apply logic to each, turn back into object
-                let servingAdjustedFood = Object.fromEntries(
-                    Object.entries(currentFood).map(([key, value]) => {
-                        // want to multiply every value by the servingCoeff, but not "id" or non number properties
-                        return [key, (typeof value === 'number' && key !== 'id') ? value * servingCoeff : value]
-                    })
-                )
+                const servingAdjustedFood = Object.fromEntries(
+                    Object.entries(currentFood).map(([key, value]) => [
+                        key,
+                        typeof value === "number" && key !== "id" ? value * servingCoeff : value,
+                    ])
+                );
 
-                //  add to output array
-                todayFoods.push(servingAdjustedFood)
+                foodList.push(servingAdjustedFood);
+
+                protein += servingAdjustedFood.protein || 0;
+                carbs += servingAdjustedFood.carbs || 0;
+                fats +=
+                    (servingAdjustedFood.unsaturated_fat || 0) +
+                    (servingAdjustedFood.saturated_fat || 0);
             }
 
-            console.log(todayFoods)
-            return todayFoods
-        }
+            return {
+                foodList,
+                macros: {
+                    protein: roundToTenth(protein),
+                    carbs: roundToTenth(carbs),
+                    fats: roundToTenth(fats),
+                },
+            };
+        },
+        [user.eaten, user.foods]
+    );
 
-    }, [user.eaten, user.foods])
+    useEffect(() => {
+        const { foodList, macros } = calcEatenList(date);
+        setEatenList(foodList);
+        setMacros(macros);
+    }, [calcEatenList, date]);
+
     return (
         <div>
             <div></div>
@@ -101,18 +89,14 @@ const Home = () => {
                 <div>
                     <h1>Today</h1>
                     <h2>Macros</h2>
-                    <h3>Protein: {protein}g</h3>
-                    <h3>Carbs: {carbs}g</h3>
-                    <h3>Fats: {fats}g</h3>
+                    <h3>Protein: {macros.protein}g</h3>
+                    <h3>Carbs: {macros.carbs}g</h3>
+                    <h3>Fats: {macros.fats}g</h3>
                     <button onClick={handleShowFood}>Log Food</button>
                     <ul>
-                        {user.eaten
-                        .filter((food) => 
-                            new Date(food.created_at) >= new Date().setHours(0,0,0,0)
-                        )
-                        .map((food, index) => (
+                        {eatenList.map((food, index) => (
                             <li key={index}>
-                                {food.id}
+                                {food.name}
                             </li>
                         ))}
                     </ul>
