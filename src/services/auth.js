@@ -31,7 +31,8 @@ export async function logout() {
 }
 
 export function useAuthStatus() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Initialize by checking local storage for a session
+  const [isLoggedIn, setIsLoggedIn] = useState(() => !!supabase?.auth.getSession());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -78,5 +79,5 @@ export function useAuthStatus() {
       }
     }
   }, []);
-  return {isLoggedIn, loading};
+  return { isLoggedIn, loading };
 }
