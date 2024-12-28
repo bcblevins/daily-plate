@@ -1,13 +1,16 @@
 import FoodSearch from "../components/FoodSearch"
-import { useContext, useEffect, useState, useCallback } from "react"
-import { UserContext } from "../components/contexts";
+import { useEffect, useState, useCallback } from "react"
+import { useUserContext } from "../hooks/useUserContext";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const [showFood, setShowFood] = useState(false);
-    const [user] = useContext(UserContext);
+    const [user] = useUserContext()
     const [eatenList, setEatenList] = useState([]);
     const [date, setDate] = useState(new Date())
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 })
+
+    const navigate = useNavigate();
 
     const handleShowFood = () => {
         setShowFood(!showFood)
@@ -83,36 +86,22 @@ const Home = () => {
 
     return (
         <div>
-            <div></div>
-
-            {!showFood &&
-                <div>
-                    <h1>Today</h1>
-                    <h2>Macros</h2>
-                    <h3>Protein: {macros.protein}g</h3>
-                    <h3>Carbs: {macros.carbs}g</h3>
-                    <h3>Fats: {macros.fats}g</h3>
-                    <button onClick={handleShowFood}>Log Food</button>
-                    <ul>
-                        {eatenList.map((food, index) => (
-                            <li key={index}>
-                                {food.name}
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            }
-            {showFood &&
-                <div>
-                    <FoodSearch />
-                    <button onClick={handleShowFood}>Back</button>
-                </div>
-
-            }
-
-
+            <div>
+                <h1>Today</h1>
+                <h2>Macros</h2>
+                <h3>Protein: {macros.protein}g</h3>
+                <h3>Carbs: {macros.carbs}g</h3>
+                <h3>Fats: {macros.fats}g</h3>
+                <button onClick={() => navigate("/search")}>Log Food</button>
+                <ul>
+                    {eatenList.map((food, index) => (
+                        <li key={index}>
+                            {food.name}
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </div>
-
     )
 }
 

@@ -1,0 +1,1 @@
+TODO: Getting logged out very often, could be supabase config or PrivateRoute setup
