@@ -3,13 +3,17 @@ import { Navigate } from "react-router-dom";
 import { useAuthStatus } from "../services/auth";
 
 function PrivateRoute({children}) {
-    const { isLoggedIn, loading } = useAuthStatus();
+    const { session, loading } = useAuthStatus();
 
     if (loading) {
+        console.log("Loading")
         return <div>Loading...</div>
     }
+
+    console.log("PrivateRoute: ", session)
     
-    if(!isLoggedIn){
+    if(!session){
+        console.log("No Session")
         return <Navigate to="/login" replace />;
     }
 

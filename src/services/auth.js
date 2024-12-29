@@ -7,6 +7,7 @@ export async function register({ email, password }) {
     password: password
   })
   if (error) {
+    console.log(error)
     throw new Error('Supabase: Unable to register new account')
   }
 }
@@ -32,26 +33,16 @@ export async function logout() {
 
 export function useAuthStatus() {
   // Initialize by checking local storage for a session
-  const [isLoggedIn, setIsLoggedIn] = useState(() => !!supabase?.auth.getSession());
+  const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const checkSession = async () => {
-      const { data } = await supabase.auth.getSession();
-      // !!data?.session is a confusing expression.
-      // - "!!" returns the boolean equivalent of something by forcing into boolean by using "!" (for example 
-      //     null would become true because null is falsy) and the second "!" flips it back to its original state 
-      //     (null would become false)
-      // - "?" is a way to suppress errors. Usually, if you try to access a property on an object that doesn't exist,
-      //     you get an error. The "?" returns undefined or null in the event that would normally report an error.
-      // Broken down, the expression is:
-      // - "data?.session": I want data.session, but if data doesn't exist return null instead of throwing error.
-      // - "!!": I want the boolean equivalent of the above  
-      setIsLoggedIn(!!data?.session);
-      setLoading(false);
-    }
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log(session)
+      setSession(session)
+      setLoading(false)
+    })
 
-    checkSession();
 
     // More confusing syntax! :D
     //
@@ -60,13 +51,13 @@ export function useAuthStatus() {
     // - the ": subscription" renames the "data" property to "subscription" 
     // - end result: we have a variable "subscription" that represents the "data" property returned by "onAuthStateChange()"
     //
-    // (_, session): 
+    // (_event, session): 
     // - "onAuthStateChange()" requires 2 arguments: (event, session). 
     // - "event" represents what state change happened, like signed in or out. 
     // - "session" represents the current session
-    // - using "_" instead of "event" just communicates that we don't care about and won't use the "event" argument.
-    const { data: subscription } = supabase.auth.onAuthStateChange((_, session) => {
-      setIsLoggedIn(!!session);
+    // - using "_event" instead of "event" just communicates that we don't care about and won't use the "event" argument.
+    const { data: { subscription }, } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
     })
 
     // This is a "cleanup" function. This will run when the component associated with the useEffect is removed from the DOM.
@@ -79,5 +70,6 @@ export function useAuthStatus() {
       }
     }
   }, []);
-  return { isLoggedIn, loading };
+  return { session, loading };
 }
+
