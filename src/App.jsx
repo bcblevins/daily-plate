@@ -1,5 +1,5 @@
 import './App.css'
-import FoodSearch from './components/FoodSearch'
+import FoodSearch from './routes/FoodSearch'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Link, BrowserRouter, Routes, Route } from 'react-router'
 import Home from './routes/Home'
@@ -7,7 +7,7 @@ import Login from './routes/Login'
 import PrivateRoute from './components/PrivateRoute'
 import { UserContext } from './components/contexts'
 import { useState } from 'react'
-import EatFood from './components/EatFood'
+import EatFood from './routes/EatFood'
 
 // This will handle API calls to nutrition info
 const queryClient = new QueryClient({

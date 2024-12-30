@@ -1,10 +1,12 @@
-import FoodSearch from "../components/FoodSearch"
+import FoodSearch from "./FoodSearch"
 import { useEffect, useState, useCallback } from "react"
 import { useUserContext } from "../hooks/useUserContext";
 import { useNavigate } from "react-router-dom";
+import { refreshUser } from "../services/userContextService";
+import { getEaten } from "../services/userService";
 
 const Home = () => {
-    const [user] = useUserContext()
+    const [user, setUser] = useUserContext()
     const [eatenList, setEatenList] = useState([]);
     const [day, setDay] = useState(new Date())
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 })
@@ -17,25 +19,38 @@ const Home = () => {
 
     function handleChangeDay(change) {
         console.log("Current date: ", day)
-        const newDate = day;
+        const newDate = new Date(day);
         newDate.setDate(newDate.getDate() + change)
         setDay(newDate)
         console.log("New date: ", newDate)
     }
 
-    // - "user.eaten" is an array of objects {id, food_id, amount, created_at}
-    // - we need an array of objects that includes nutritional info
-    // - "calcTodaysFoodList" gets nutritional info from "user.foods" and adjusts them
-    // by the "amount" in "user.eaten"
-    const calcEatenList = useCallback(
-        (date) => {
+
+
+
+    useEffect(() => {
+        getEaten(day).then((eatenList) => {
+            const { foodList, macros } = calcEatenList(day, eatenList);
+            setEatenList(foodList);
+            setMacros(macros);
+        })
+
+
+
+        if (Date.now - user.retrieved > 30000) {
+            refreshUser(setUser)
+        }
+
+        // "calcTodaysFoodList" gets nutritional info from "user.foods" and adjusts them
+        // by the "amount" in "eatenList"
+        function calcEatenList(date, eatenList) {
             const foodList = [];
             const dayAfter = new Date(date);
             dayAfter.setDate(dayAfter.getDate() + 1);
             dayAfter.setHours(0, 0, 0, 0);
             date.setHours(0, 0, 0, 0);
 
-            const eaten = user.eaten.filter((food) => {
+            const eaten = eatenList.filter((food) => {
                 const created = new Date(food.created_at);
                 return created >= date && created < dayAfter;
             });
@@ -77,15 +92,8 @@ const Home = () => {
                     fats: roundToTenth(fats),
                 },
             };
-        },
-        [user.eaten, user.foods]
-    );
-
-    useEffect(() => {
-        const { foodList, macros } = calcEatenList(day);
-        setEatenList(foodList);
-        setMacros(macros);
-    }, [calcEatenList, day]);
+        }
+    }, [day, user, setUser]);
 
     return (
         <div>

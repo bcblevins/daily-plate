@@ -3,3 +3,4 @@ TODO: Getting logged out on reload or navigation
     - Try to manage localstorage manually
 
 TODO: Add buttons to navigate between days on home screen
+    - Changing date does not update food list. useEffect dependency problem?

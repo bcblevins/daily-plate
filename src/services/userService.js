@@ -3,21 +3,18 @@ import supabase from './supabase'
 export async function getUser() {
 
     let user = {};
-
+    user.retrieved = Date.now();
     const [foods, prefs, eaten] = await Promise.all([
         getUserFoods(),
         getPrefs(),
-        getEaten()
     ])
 
     console.log("foods: ", foods)
     console.log("prefs: ", prefs)
-    console.log("eaten: ", eaten)
     
 
     user.foods = foods;
     user.prefs = prefs;
-    user.eaten = eaten;
 
     return user;
 }
@@ -47,14 +44,15 @@ export async function getPrefs() {
     }
 }
 
-export async function getEaten() {
-    const fiveDaysAgo = new Date();
-    fiveDaysAgo.setDate(fiveDaysAgo.getDate() - 5) 
-    fiveDaysAgo.setHours(0,0,0,0)
+export async function getEaten(date) {
+    date.setHours(0,0,0,0);
+    const dayAfter = new Date(date);
+    dayAfter.setDate(dayAfter.getDate() + 1)
     const { data, error } = await supabase
     .from("user_log")
     .select()
-    .gte("created_at", fiveDaysAgo.toISOString())
+    .gte("created_at", date.toISOString())
+    .lte("created_at", dayAfter.toISOString())
 
     if (error) {
         throw new Error("Cannot fetch eaten foods", error)

@@ -172,6 +172,11 @@ export async function searchAllFoods({ queryKey }) {
   return [...results, ...dbResults]
 }
 
+// TODO: 
+//   Situation: User selects food from global db foods and eats it. They come back
+//   and select the same food again (not from user list). 
+//   Solution: prevent user from adding a food to user_foods if an identical entry
+//   exists. 
 export async function eatFood(data) {
 
   let food = data.food

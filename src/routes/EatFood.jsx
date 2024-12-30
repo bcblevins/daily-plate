@@ -32,13 +32,16 @@ const EatFood = () => {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
-            <h2>{food.name}</h2>
-            <input type="number" name="amount" onChange={(e) => setAmount(e.target.value)} />
-            <p>{food.unit}</p>
-            <input type="submit" value="Eat"/>
+        <div>
+            <form onSubmit={handleSubmit}>
+                <h2>{food.name}</h2>
+                <input type="number" name="amount" onChange={(e) => setAmount(e.target.value)} />
+                <p>{food.unit}</p>
+                <input type="submit" value="Eat" />
+            </form>
+            <button onClick={() => {navigate("/search")}} >Back</button>
+        </div>
 
-        </form>
     )
 }
 
