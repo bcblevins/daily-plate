@@ -9,8 +9,6 @@ function PrivateRoute({children}) {
         console.log("Loading")
         return <div>Loading...</div>
     }
-
-    console.log("PrivateRoute: ", session)
     
     if(!session){
         console.log("No Session")

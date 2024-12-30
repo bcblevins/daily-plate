@@ -4,20 +4,23 @@ import { useUserContext } from "../hooks/useUserContext";
 import { useNavigate } from "react-router-dom";
 
 const Home = () => {
-    const [showFood, setShowFood] = useState(false);
     const [user] = useUserContext()
     const [eatenList, setEatenList] = useState([]);
-    const [date, setDate] = useState(new Date())
+    const [day, setDay] = useState(new Date())
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 })
 
     const navigate = useNavigate();
 
-    const handleShowFood = () => {
-        setShowFood(!showFood)
-    }
-
     function roundToTenth(num) {
         return Math.round(num * 10) / 10;
+    }
+
+    function handleChangeDay(change) {
+        console.log("Current date: ", day)
+        const newDate = day;
+        newDate.setDate(newDate.getDate() + change)
+        setDay(newDate)
+        console.log("New date: ", newDate)
     }
 
     // - "user.eaten" is an array of objects {id, food_id, amount, created_at}
@@ -79,15 +82,17 @@ const Home = () => {
     );
 
     useEffect(() => {
-        const { foodList, macros } = calcEatenList(date);
+        const { foodList, macros } = calcEatenList(day);
         setEatenList(foodList);
         setMacros(macros);
-    }, [calcEatenList, date]);
+    }, [calcEatenList, day]);
 
     return (
         <div>
             <div>
+                <button onClick={() => handleChangeDay(-1)} >{"<"}</button>
                 <h1>Today</h1>
+                <button onClick={() => handleChangeDay(1)} >{">"}</button>
                 <h2>Macros</h2>
                 <h3>Protein: {macros.protein}g</h3>
                 <h3>Carbs: {macros.carbs}g</h3>
