@@ -1,7 +1,11 @@
 ## Short term TODOs
 TODO: Getting logged out on reload or address bar navigation
 - Session info being saved to storage, but erased on reload. No idea why
-- Try to manage localstorage manually
+- Learn how supabase manages tokens
+    - After signing in, token and refresh token returned. Token expires quickly, refresh token can be used exactly 1 time to refresh session and recieve new token/refresh token.
+- Learn how auth is normally done in React without a helper API
+- Refresh memory of best practices
+- Manually implement persistent session.
 
 ~~TODO: Add buttons to navigate between days on home screen~~
     ~~- Changing date does not update food list. useEffect dependency problem?~~
