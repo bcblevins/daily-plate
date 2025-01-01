@@ -17,21 +17,20 @@ export async function getUser() {
 
 export async function getUserFoods() {
     const { data, error } = await supabase
-    .from("user_foods")
-    .select()
+        .from("user_foods")
+        .select()
 
     if (error) {
         throw new Error("Cannot fetch user foods.", error.message)
     } else {
-        console.log(data)
         return data
     }
 }
 
 export async function getPrefs() {
     const { data, error } = await supabase
-    .from("user_prefs")
-    .select()
+        .from("user_prefs")
+        .select()
 
     if (error) {
         throw new Error("Cannot fetch user prefs", error.message)
@@ -41,19 +40,19 @@ export async function getPrefs() {
 }
 
 export async function getEaten(date) {
-    date.setHours(0,0,0,0);
+    date.setHours(0, 0, 0, 0);
     const dayAfter = new Date(date);
     dayAfter.setDate(dayAfter.getDate() + 1)
     const { data, error } = await supabase
-    .from("user_log")
-    .select()
-    .gte("created_at", date.toISOString())
-    .lte("created_at", dayAfter.toISOString())
+        .from("user_log")
+        .select()
+        .gte("created_at", date.toISOString())
+        .lte("created_at", dayAfter.toISOString())
 
     if (error) {
         throw new Error("Cannot fetch eaten foods", error)
     } else {
-        console.log(data)
         return data
     }
 }
+

@@ -22,9 +22,7 @@ const Login = () => {
         }, 
         {
         onSuccess: async (data) => {
-            console.log("Login successful")
-            console.log(data)
-            console.log(await fetchUser())
+            await fetchUser();
             navigate('/')
         },
         onError: (error) => {

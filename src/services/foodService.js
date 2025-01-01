@@ -134,6 +134,8 @@ const foods = [
 ];
 
 
+
+
 export async function searchDBFoods(search) {
 
   let results = []
@@ -232,3 +234,90 @@ export async function addUserFood(food) {
   return data;
 }
 
+export function calcEatenList(date, eatenList, user) {
+  const foodList = [];
+  const dayAfter = new Date(date);
+  dayAfter.setDate(dayAfter.getDate() + 1);
+  dayAfter.setHours(0, 0, 0, 0);
+  date.setHours(0, 0, 0, 0);
+
+  const eaten = eatenList.filter((food) => {
+    const created = new Date(food.created_at);
+    return created >= date && created < dayAfter;
+  });
+
+  let protein = 0,
+    carbs = 0,
+    fats = 0;
+
+  for (const f of eaten) {
+    const currentFood = user.foods.find((food) => food.id === f.food_id);
+    if (!currentFood) {
+      console.warn(`No user.food found for food id: ${f.food_id}. Skipping.`);
+      continue;
+    }
+
+    const servingCoeff = f.amount / currentFood.amount;
+
+    const servingAdjustedFood = Object.fromEntries(
+      Object.entries(currentFood).map(([key, value]) => [
+        key,
+        typeof value === "number" && key !== "id" ? value * servingCoeff : value,
+      ])
+    );
+
+    foodList.push(servingAdjustedFood);
+
+    protein += servingAdjustedFood.protein || 0;
+    carbs += servingAdjustedFood.carbs || 0;
+    fats +=
+      (servingAdjustedFood.unsaturated_fat || 0) +
+      (servingAdjustedFood.saturated_fat || 0);
+  }
+
+  return {
+    foodList,
+    macros: {
+      protein: roundToTenth(protein),
+      carbs: roundToTenth(carbs),
+      fats: roundToTenth(fats),
+    },
+  };
+}
+
+
+
+export function calcNutrientList(foodList) {
+  const nutrients = new Map();
+  console.log("foodList: ", foodList)
+
+  // loop foods (each has nutrient info)
+  for (let food of foodList) {
+    console.log(food)
+    // loop over food nutrients
+    for (let [key, value] of Object.entries(food)) {
+      // if nutrient already in map, add to existing amount, otherwise create an entry for nutrient
+      if (isNutrient(key, value)) {
+        value = roundToTenth(value)
+        if (nutrients.get(key)) {
+          let amount = roundToTenth(nutrients.get(key))
+          nutrients.set(key, amount + value)
+        } else {
+          nutrients.set(key, roundToTenth(value))
+        }
+      }
+    }
+  }
+
+  return Array.from(nutrients);
+}
+
+function isNutrient(key, value) {
+  return key !== "amount" &&
+    key !== "id" &&
+    typeof value === "number"
+}
+
+function roundToTenth(num) {
+  return Math.round(num * 10) / 10;
+}
