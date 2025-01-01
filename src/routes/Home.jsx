@@ -18,11 +18,16 @@ const Home = () => {
     }
 
     function handleChangeDay(change) {
-        console.log("Current date: ", day)
         const newDate = new Date(day);
         newDate.setDate(newDate.getDate() + change)
         setDay(newDate)
-        console.log("New date: ", newDate)
+    }
+
+    function isDateToday(date) {
+        const today = new Date()
+        return today.getFullYear() === date.getFullYear() &&
+        today.getMonth() === date.getMonth() &&
+        today.getDate() === date.getDate()
     }
 
 
@@ -99,7 +104,7 @@ const Home = () => {
         <div>
             <div>
                 <button onClick={() => handleChangeDay(-1)} >{"<"}</button>
-                <h1>Today</h1>
+                <h1>{ isDateToday(day) ? "Today" : day.toDateString() }</h1>
                 <button onClick={() => handleChangeDay(1)} >{">"}</button>
                 <h2>Macros</h2>
                 <h3>Protein: {macros.protein}g</h3>

@@ -8,6 +8,7 @@ import PrivateRoute from './components/PrivateRoute'
 import { UserContext } from './components/contexts'
 import { useState } from 'react'
 import EatFood from './routes/EatFood'
+import RecipeBuilder from './routes/RecipeBuilder'
 
 // This will handle API calls to nutrition info
 const queryClient = new QueryClient({
@@ -49,6 +50,14 @@ const App = () => {
               element={
                 <PrivateRoute >
                   <EatFood />
+                </PrivateRoute>
+              }
+            />
+            <Route
+              path="/eat"
+              element={
+                <PrivateRoute >
+                  <RecipeBuilder />
                 </PrivateRoute>
               }
             />

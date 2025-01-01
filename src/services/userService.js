@@ -9,10 +9,6 @@ export async function getUser() {
         getPrefs(),
     ])
 
-    console.log("foods: ", foods)
-    console.log("prefs: ", prefs)
-    
-
     user.foods = foods;
     user.prefs = prefs;
 

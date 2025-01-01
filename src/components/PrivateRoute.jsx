@@ -6,7 +6,6 @@ function PrivateRoute({children}) {
     const { session, loading } = useAuthStatus();
 
     if (loading) {
-        console.log("Loading")
         return <div>Loading...</div>
     }
     

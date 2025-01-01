@@ -19,7 +19,8 @@ TODO: Start UI design plan
 - FoodSearch (Search and select food to eat)
 - EatFood (Log food with amount eaten)
 - UserPrefs (Goals, metrics, settings)
-- UserFoods (See/edit custom foods, build custom recipes)
+- UserFoods (See/edit custom foods)
+- RecipeBuilder
 - Stats
 
 ## Long term TODOs:

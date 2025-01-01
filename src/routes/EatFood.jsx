@@ -16,7 +16,6 @@ const EatFood = () => {
 
     const mutation = useMutation(eatFood, {
         onSuccess: async () => {
-            console.log("Food successfully logged. Refreshing user...")
             await refreshUser(setUser);
             navigate('/');
         },
@@ -27,7 +26,6 @@ const EatFood = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault()
-        console.log("component food: " + JSON.stringify(food))
         mutation.mutate({ food: food, amount: amount })
     }
 
