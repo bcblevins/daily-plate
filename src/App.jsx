@@ -1,4 +1,4 @@
-import './App.css'
+import './assets/scss/global/App.scss'
 import FoodSearch from './routes/FoodSearch'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Link, BrowserRouter, Routes, Route } from 'react-router'

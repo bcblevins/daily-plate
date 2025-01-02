@@ -1,0 +1,68 @@
+@use '../global/variables' as vars;
+
+.home {
+
+
+    header {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: vars.$darkGrey;
+
+        h1 {
+            margin-inline: 20px;
+        }
+
+        .leftDateButton {
+            transform: rotate(-45deg);
+        }
+
+        .rightDateButton {
+            transform: rotate(135deg);
+        }
+
+        button {
+            background-color: transparent;
+            width: 20px;
+            height: 20px;
+            border: 2px solid vars.$green;
+            border-bottom: none;
+            border-right: none;
+        }
+    }
+
+    .macros {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
+
+        div {
+            margin-bottom: 10px;
+            h2 {
+                display: flex;
+                justify-content: space-between;
+                span {
+                    color: vars.$blue;
+                }
+            }
+            .progressBar {
+                height: 20px;
+                width: 80vw;
+                background-color: vars.$darkGrey;
+
+                div {
+                    height: 100%;
+                    background-color: vars.$blue;
+                }
+            }
+
+            .progressNumbers {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
+
+
+    }
+}

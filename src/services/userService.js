@@ -4,13 +4,13 @@ export async function getUser() {
 
     let user = {};
     user.retrieved = Date.now();
-    const [foods, prefs, eaten] = await Promise.all([
+    const [foods, goals] = await Promise.all([
         getUserFoods(),
-        getPrefs(),
+        getNutrientGoals(),
     ])
 
     user.foods = foods;
-    user.prefs = prefs;
+    user.goals = goals;
 
     return user;
 }
@@ -27,15 +27,15 @@ export async function getUserFoods() {
     }
 }
 
-export async function getPrefs() {
+export async function getNutrientGoals() {
     const { data, error } = await supabase
-        .from("user_prefs")
+        .from("user_nutrient_goals")
         .select()
 
     if (error) {
         throw new Error("Cannot fetch user prefs", error.message)
     } else {
-        return data
+        return data[0]
     }
 }
 
