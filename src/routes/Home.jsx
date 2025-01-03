@@ -5,7 +5,7 @@ import { refreshUser } from "../services/userContextService";
 import { getEaten } from "../services/userService";
 import { calcEatenList } from "../services/foodService"
 import styles from '../assets/scss/modules/Home.module.scss'
-import NavBar from "../components/NavBar";
+import NavBar from "../components/pieces/NavBar";
 
 const Home = () => {
     const [user, setUser] = useUserContext()
@@ -14,7 +14,6 @@ const Home = () => {
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 })
 
     const navigate = useNavigate();
-
 
 
     function handleChangeDay(change) {
@@ -31,14 +30,14 @@ const Home = () => {
     }
 
     function macroProgress(amount, goal) {
-        console.log(`${amount} / ${goal}`)
         let percent = (amount / goal) * 100
-        console.log(percent)
         return Math.round(percent);
     }
 
-
-
+    function dateMaker() {
+        let date = day.toDateString()
+        return date.substring(0, date.length - 4)
+    }
 
     useEffect(() => {
         getEaten(day).then((eatenList) => {
@@ -58,7 +57,7 @@ const Home = () => {
 
             <header>
                 <button onClick={() => handleChangeDay(-1)} className={styles.leftDateButton} >{ }</button>
-                <h1>{isDateToday(day) ? "Today" : day.toDateString()}</h1>
+                <h1>{isDateToday(day) ? "Today" : dateMaker()}</h1>
                 <button onClick={() => handleChangeDay(1)} className={styles.rightDateButton} >{ }</button>
             </header>
 
@@ -96,15 +95,13 @@ const Home = () => {
                 </div>
 
             </div>
-            <button onClick={() => navigate("/search")}>Log Food</button>
-            <ul>
+            <ul className={styles.foodList} >
                 {eatenList.map((food, index) => (
                     <li key={index}>
-                        {food.name}
+                        {food.name} {food.protein} | {food.carbs} | {food.saturated_fat + food.unsaturated_fat}
                     </li>
                 ))}
             </ul>
-            <button onClick={() => navigate("/summary")}>Summary</button>
             <NavBar className={styles.navBar} />
         </div>
     )

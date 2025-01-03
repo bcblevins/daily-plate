@@ -1,6 +1,7 @@
 ## Short term TODOs
 
 - TODO: Start UI design plan
+
 - ~~TODO: Add buttons to navigate between days on home screen~~
     ~~- Changing date does not update food list. useEffect dependency problem?~~
 

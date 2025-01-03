@@ -262,7 +262,7 @@ export function calcEatenList(date, eatenList, user) {
     const servingAdjustedFood = Object.fromEntries(
       Object.entries(currentFood).map(([key, value]) => [
         key,
-        typeof value === "number" && key !== "id" ? value * servingCoeff : value,
+        typeof value === "number" && key !== "id" ? roundToTenth(value * servingCoeff) : value,
       ])
     );
 
