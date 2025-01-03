@@ -5,6 +5,7 @@ import { refreshUser } from "../services/userContextService";
 import { getEaten } from "../services/userService";
 import { calcEatenList } from "../services/foodService"
 import styles from '../assets/scss/modules/Home.module.scss'
+import NavBar from "../components/NavBar";
 
 const Home = () => {
     const [user, setUser] = useUserContext()
@@ -104,6 +105,7 @@ const Home = () => {
                 ))}
             </ul>
             <button onClick={() => navigate("/summary")}>Summary</button>
+            <NavBar className={styles.navBar} />
         </div>
     )
 }

@@ -1,7 +1,7 @@
 @use '../global/variables' as vars;
 
 .home {
-
+    height: 100vh;
 
     header {
         display: flex;
@@ -64,5 +64,10 @@
         }
 
 
+    }
+
+    .navBar {
+        position: fixed;
+        bottom: 0px;
     }
 }
