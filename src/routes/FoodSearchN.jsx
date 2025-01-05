@@ -2,11 +2,8 @@ import { useContext, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { searchAllFoods } from "../services/foodService";
 import { UserContext } from "../components/contexts";
-import { useNavigate } from "react-router-dom";
 
-const FoodSearch = () => {
-    const navigate = useNavigate();
-
+const FoodSearch = ({ onFoodSelect }) => {
     const [search, setSearch] = useState("");
     const user = useContext(UserContext)
 
@@ -14,15 +11,9 @@ const FoodSearch = () => {
         enabled: !!search // Disable query until there is input
     });
 
-    const handleFoodSelection = (food) => {
-        navigate("/eat", { state: food })
-    }
-
-
     return (
         <div>
             <div>
-                <h1>Food Search</h1>
                 <input
                     type="text"
                     placeholder="Search"
@@ -35,7 +26,7 @@ const FoodSearch = () => {
                             {results.data.map((food, index) => (
                                 <li
                                     key={index}
-                                    onClick={() => handleFoodSelection(food)}
+                                    onClick={() => onFoodSelect(food)}
                                 >
                                     {food.name} ({food.amount}{food.unit}) {food.isUserFood ? "[User]" : ""}
                                 </li>
@@ -43,7 +34,6 @@ const FoodSearch = () => {
                         </ul>
                     </div>
                 )}
-                <button onClick={() => { navigate("/") }} >Back</button>
             </div>
         </div>
     );

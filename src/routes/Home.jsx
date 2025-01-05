@@ -5,16 +5,13 @@ import { refreshUser } from "../services/userContextService";
 import { getEaten } from "../services/userService";
 import { calcEatenList } from "../services/foodService"
 import styles from '../assets/scss/modules/Home.module.scss'
-import NavBar from "../components/pieces/NavBar";
+import NavBar from "../components/items/NavBar";
 
 const Home = () => {
     const [user, setUser] = useUserContext()
     const [eatenList, setEatenList] = useState([]);
     const [day, setDay] = useState(new Date())
     const [macros, setMacros] = useState({ protein: 0, carbs: 0, fats: 0 })
-
-    const navigate = useNavigate();
-
 
     function handleChangeDay(change) {
         const newDate = new Date(day);
