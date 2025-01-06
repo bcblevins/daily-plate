@@ -32,8 +32,6 @@ export async function logout() {
 }
 
 export function useAuthStatus() {
-  //TODO: fix session persistence on reload
-  // Initialize by checking local storage for a session
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
 
